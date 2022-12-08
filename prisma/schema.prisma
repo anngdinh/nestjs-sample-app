@@ -4,21 +4,321 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  url      = "sqlserver://localhost:1433;database=quickstart;user=SA;password=<YourStrong@Passw0rd>;TrustServerCertificate=true"
+  url      = "sqlserver://localhost:1433;database=master;user=SA;password=<YourStrong@Passw0rd>;TrustServerCertificate=true"
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  authorId  Int?
-  User      User?    @relation(fields: [authorId], references: [id])
+model Account_GV {
+  tai_khoan    String    @id(map: "PK__Account___ABA0D026CB0CC309") @db.VarChar(255)
+  mat_khau     String    @db.VarChar(255)
+  ma_giao_vien Int
+  Giao_Vien    Giao_Vien @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onDelete: Cascade, map: "FK_ACGV_ma_phu_huynh")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  Post  Post[]
+model Account_HV {
+  tai_khoan   String   @id(map: "PK__Account___ABA0D0261278EFE7") @db.VarChar(255)
+  mat_khau    String   @db.VarChar(255)
+  ma_hoc_vien Int
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_ACHV_ma_phu_huynh")
+}
+
+model Account_QL {
+  tai_khoan  String  @id(map: "PK__Account___ABA0D02692ADDB69") @db.VarChar(255)
+  mat_khau   String  @db.VarChar(255)
+  ma_quan_ly Int
+  Quan_Ly    Quan_Ly @relation(fields: [ma_quan_ly], references: [ma_quan_ly], onDelete: Cascade, map: "FK_ACQL_ma_phu_huynh")
+}
+
+model Ap_Dung {
+  ma_bien_lai       Int
+  ma_khuyen_mai     Int
+  Bien_Lai_Thu_Tien Bien_Lai_Thu_Tien @relation(fields: [ma_bien_lai], references: [ma_bien_lai], onDelete: Cascade, map: "FK_AD_ma_bien_lai")
+  Khuyen_Mai        Khuyen_Mai        @relation(fields: [ma_khuyen_mai], references: [ma_khuyen_mai], onDelete: Cascade, map: "FK_AD_ma_khuyen_mai")
+
+  @@id([ma_bien_lai, ma_khuyen_mai], map: "PK__Ap_Dung__BE79EF3E0D585611")
+}
+
+model Bien_Lai_Thu_Tien {
+  ma_bien_lai            Int       @id(map: "PK__Bien_Lai__9E6367F537742FE7") @default(autoincrement())
+  so_tien_goc            Int
+  so_tien_can_thanh_toan Int
+  so_tien_da_thanh_toan  Int
+  so_tien_con_lai        Int
+  hinh_thuc              String    @db.VarChar(255)
+  ma_lop_hoc             Int
+  ma_hoc_vien            Int
+  Ap_Dung                Ap_Dung[]
+  Hoc_Vien               Hoc_Vien  @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onUpdate: NoAction, map: "FK__Bien_Lai___ma_ho__668030F6")
+  Lop_Hoc                Lop_Hoc   @relation(fields: [ma_lop_hoc], references: [ma_lop_hoc], onUpdate: NoAction, map: "FK__Bien_Lai___ma_lo__658C0CBD")
+}
+
+model Chi_Nhanh {
+  ma_chi_nhanh  Int          @id(map: "PK__Chi_Nhan__6477329CF33CEB85") @default(autoincrement())
+  ten_chi_nhanh String       @db.VarChar(255)
+  dia_chi       String       @db.VarChar(255)
+  Quan_Ly       Quan_Ly[]
+  To_Chuc       To_Chuc[]
+  Trien_Khai    Trien_Khai[]
+}
+
+model Chung_Chi {
+  ten_chung_chi String    @db.VarChar(255)
+  ngay_thi      DateTime  @db.Date
+  thoi_han      DateTime  @db.Date
+  ma_giao_vien  Int
+  Giao_Vien     Giao_Vien @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onDelete: Cascade, map: "FK_CC_ma_giao_vien")
+
+  @@id([ten_chung_chi, ngay_thi, thoi_han, ma_giao_vien], map: "PK__Chung_Ch__923C360F972E65F6")
+}
+
+model Chuong_Trinh_Hoc {
+  ma_chuong_trinh                                                                                Int                         @id(map: "PK__Chuong_T__3F73C9AE2CE58833") @default(autoincrement())
+  ten_chuong_trinh                                                                               String                      @db.VarChar(255)
+  tai_lieu                                                                                       String?                     @db.VarChar(255)
+  muc_tieu                                                                                       String?                     @db.VarChar(255)
+  Chuong_Trinh_Hoc_Truoc_Do_Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinhToChuong_Trinh_Hoc          Chuong_Trinh_Hoc_Truoc_Do[] @relation("Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinhToChuong_Trinh_Hoc") @ignore
+  Chuong_Trinh_Hoc_Truoc_Do_Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinh_truoc_doToChuong_Trinh_Hoc Chuong_Trinh_Hoc_Truoc_Do[] @relation("Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinh_truoc_doToChuong_Trinh_Hoc") @ignore
+  Khoa_Hoc                                                                                       Khoa_Hoc[]
+  Lo_Trinh_Hoc                                                                                   Lo_Trinh_Hoc[]
+  Trien_Khai                                                                                     Trien_Khai[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model Chuong_Trinh_Hoc_Truoc_Do {
+  ma_chuong_trinh                                                                       Int
+  ma_chuong_trinh_truoc_do                                                              Int
+  Chuong_Trinh_Hoc_Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinhToChuong_Trinh_Hoc          Chuong_Trinh_Hoc @relation("Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinhToChuong_Trinh_Hoc", fields: [ma_chuong_trinh], references: [ma_chuong_trinh], onDelete: Cascade, map: "FK_CTHT_ma_chuong_trinh")
+  Chuong_Trinh_Hoc_Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinh_truoc_doToChuong_Trinh_Hoc Chuong_Trinh_Hoc @relation("Chuong_Trinh_Hoc_Truoc_Do_ma_chuong_trinh_truoc_doToChuong_Trinh_Hoc", fields: [ma_chuong_trinh_truoc_do], references: [ma_chuong_trinh], onUpdate: NoAction, map: "FK_CTHT_ma_chuong_trinh_truoc_do")
+
+  @@ignore
+}
+
+model Dang_Ki {
+  ma_khoa_hoc Int
+  ma_hoc_vien Int
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_DK_ma_hoc_vien")
+  Khoa_Hoc    Khoa_Hoc @relation(fields: [ma_khoa_hoc], references: [ma_khoa_hoc], onDelete: Cascade, map: "FK_DK_ma_khoa_hoc")
+
+  @@id([ma_khoa_hoc, ma_hoc_vien], map: "PK__Dang_Ki__5694F9C4A6CDC89B")
+}
+
+model Diem_Danh {
+  ma_tiet_hoc Int
+  ma_hoc_vien Int
+  tinh_trang  String?  @db.VarChar(255)
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_DD_ma_hoc_vien")
+  Tiet_Hoc    Tiet_Hoc @relation(fields: [ma_tiet_hoc], references: [ma_tiet_hoc], onDelete: Cascade, map: "FK_DD_ma_tiet_hoc")
+
+  @@id([ma_tiet_hoc, ma_hoc_vien], map: "PK__Diem_Dan__496E415E690A1A21")
+}
+
+model Email_GV {
+  ma_giao_vien Int
+  email        String    @db.VarChar(255)
+  Giao_Vien    Giao_Vien @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onDelete: Cascade, map: "FK_Email_ma_giao_vien")
+
+  @@id([ma_giao_vien, email], map: "PK__Email_GV__7F15CEE3497B62F3")
+}
+
+model Email_HV {
+  ma_hoc_vien Int
+  email       String   @db.VarChar(255)
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_Email_ma_hoc_vien")
+
+  @@id([ma_hoc_vien, email], map: "PK__Email_HV__28076C070801CF18")
+}
+
+model Email_PH {
+  ma_phu_huynh Int
+  email        String    @db.VarChar(255)
+  Phu_Huynh    Phu_Huynh @relation(fields: [ma_phu_huynh], references: [ma_phu_huynh], onDelete: Cascade, map: "FK_Email_ma_phu_huynh")
+
+  @@id([ma_phu_huynh, email], map: "PK__Email_PH__623A3E2554C77ED3")
+}
+
+model Email_QL {
+  ma_quan_ly Int
+  email      String  @db.VarChar(255)
+  Quan_Ly    Quan_Ly @relation(fields: [ma_quan_ly], references: [ma_quan_ly], onDelete: Cascade, map: "FK_Email_ma_quan_ly")
+
+  @@id([ma_quan_ly, email], map: "PK__Email_QL__5E8ED770C5E7F929")
+}
+
+model Giao_Vien {
+  ma_giao_vien Int          @id(map: "PK__Giao_Vie__35A328F569252942") @default(autoincrement())
+  ten          String       @db.VarChar(255)
+  ngay_sinh    DateTime?    @db.Date
+  dia_chi      String?      @db.VarChar(255)
+  Account_GV   Account_GV[]
+  Chung_Chi    Chung_Chi[]
+  Email_GV     Email_GV[]
+  Lop_Hoc      Lop_Hoc[]
+  SDT_GV       SDT_GV[]
+  Tiet_Hoc     Tiet_Hoc[]
+}
+
+model Hoc {
+  ma_lop_hoc  Int
+  ma_hoc_vien Int
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_H_ma_hoc_vien")
+  Lop_Hoc     Lop_Hoc  @relation(fields: [ma_lop_hoc], references: [ma_lop_hoc], onDelete: Cascade, map: "FK_H_ma_lop_hoc")
+
+  @@id([ma_lop_hoc, ma_hoc_vien], map: "PK__Hoc__8829651C77B85143")
+}
+
+model Hoc_Vien {
+  ma_hoc_vien       Int                 @id(map: "PK__Hoc_Vien__62B18A112698797F") @default(autoincrement())
+  ten               String              @db.VarChar(255)
+  ngay_sinh         DateTime?           @db.Date
+  dia_chi           String?             @db.VarChar(255)
+  Account_HV        Account_HV[]
+  Bien_Lai_Thu_Tien Bien_Lai_Thu_Tien[]
+  Dang_Ki           Dang_Ki[]
+  Diem_Danh         Diem_Danh[]
+  Email_HV          Email_HV[]
+  Hoc               Hoc[]
+  Phu_Huynh         Phu_Huynh[]
+  SDT_HV            SDT_HV[]
+}
+
+model Khoa_Hoc {
+  ma_khoa_hoc        Int              @id(map: "PK__Khoa_Hoc__50BFE165E04CB0A2") @default(autoincrement())
+  ten_khoa_hoc       String?          @db.VarChar(255)
+  thoi_gian_bat_dau  DateTime?        @db.Date
+  thoi_gian_ket_thuc DateTime?        @db.Date
+  hoc_phi            Int?
+  ma_chuong_trinh    Int
+  Dang_Ki            Dang_Ki[]
+  Chuong_Trinh_Hoc   Chuong_Trinh_Hoc @relation(fields: [ma_chuong_trinh], references: [ma_chuong_trinh], onDelete: Cascade, map: "FK_KH_ma_chuong_trinh")
+  Lop_Hoc            Lop_Hoc[]
+  To_Chuc            To_Chuc[]
+}
+
+model Khuyen_Mai {
+  ma_khuyen_mai        Int       @id(map: "PK__Khuyen_M__01A88CB38F9828B6") @default(autoincrement())
+  ap_dung              String    @db.VarChar(255)
+  hinh_thuc_khuyen_mai String    @db.VarChar(255)
+  gia_tri              Int
+  ngay_bat_dau         DateTime? @db.Date
+  ngay_ket_thuc        DateTime? @db.Date
+  Ap_Dung              Ap_Dung[]
+}
+
+model Lo_Trinh_Hoc {
+  buoi             Int
+  noi_dung         String           @db.VarChar(255)
+  ma_chuong_trinh  Int
+  Chuong_Trinh_Hoc Chuong_Trinh_Hoc @relation(fields: [ma_chuong_trinh], references: [ma_chuong_trinh], onDelete: Cascade, map: "FK_LTH_ma_chuong_trinh")
+
+  @@id([buoi, noi_dung, ma_chuong_trinh], map: "PK__Lo_Trinh__4111030EDAA5A49D")
+}
+
+model Lop_Hoc {
+  ma_lop_hoc        Int                 @id(map: "PK__Lop_Hoc__8E027DBD225FDF99") @default(autoincrement())
+  so_luong          Int?
+  so_phong          Int
+  ma_chi_nhanh      Int
+  ma_giao_vien      Int
+  ma_khoa_hoc       Int
+  Bien_Lai_Thu_Tien Bien_Lai_Thu_Tien[]
+  Hoc               Hoc[]
+  Giao_Vien         Giao_Vien           @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onUpdate: NoAction, map: "FK_LH_ma_giao_vien")
+  Khoa_Hoc          Khoa_Hoc            @relation(fields: [ma_khoa_hoc], references: [ma_khoa_hoc], onDelete: Cascade, map: "FK_LH_ma_khoa_hoc")
+  Phong_Hoc         Phong_Hoc           @relation(fields: [so_phong, ma_chi_nhanh], references: [so_phong, ma_chi_nhanh], onDelete: Cascade, map: "FK_LH_phong_hoc")
+  Tiet_Hoc          Tiet_Hoc[]
+}
+
+model Phong_Hoc {
+  so_phong     Int
+  ma_chi_nhanh Int
+  suc_chua     Int
+  Lop_Hoc      Lop_Hoc[]
+
+  @@id([so_phong, ma_chi_nhanh], map: "PK__Phong_Ho__A192BA773839BC50")
+}
+
+model Phu_Huynh {
+  ma_phu_huynh Int        @id(map: "PK__Phu_Huyn__288CD833FF9ADF6D") @default(autoincrement())
+  ngay_sinh    DateTime?  @db.Date
+  ten          String     @db.VarChar(255)
+  ma_hoc_vien  Int
+  Email_PH     Email_PH[]
+  Hoc_Vien     Hoc_Vien   @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_PH_ma_hoc_vien")
+  SDT_PH       SDT_PH[]
+}
+
+model Quan_Ly {
+  ma_quan_ly   Int          @id(map: "PK__Quan_Ly__143831665A6179F6") @default(autoincrement())
+  ten          String       @db.VarChar(255)
+  ngay_sinh    DateTime?    @db.Date
+  dia_chi      String?      @db.VarChar(255)
+  bang_dai_hoc String?      @db.VarChar(255)
+  ma_chi_nhanh Int
+  Account_QL   Account_QL[]
+  Email_QL     Email_QL[]
+  Chi_Nhanh    Chi_Nhanh    @relation(fields: [ma_chi_nhanh], references: [ma_chi_nhanh], onUpdate: NoAction, map: "FK__Quan_Ly__ma_chi___5DEAEAF5")
+  SDT_QL       SDT_QL[]
+}
+
+model SDT_GV {
+  ma_giao_vien Int
+  sdt          String    @db.VarChar(255)
+  Giao_Vien    Giao_Vien @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onDelete: Cascade, map: "FK_SDT_ma_giao_vien")
+
+  @@id([ma_giao_vien, sdt], map: "PK__SDT_GV__087ED3BD566A2A68")
+}
+
+model SDT_HV {
+  ma_hoc_vien Int
+  sdt         String   @db.VarChar(255)
+  Hoc_Vien    Hoc_Vien @relation(fields: [ma_hoc_vien], references: [ma_hoc_vien], onDelete: Cascade, map: "FK_SDT_ma_hoc_vien")
+
+  @@id([ma_hoc_vien, sdt], map: "PK__SDT_HV__5F6C7159F82452D8")
+}
+
+model SDT_PH {
+  ma_phu_huynh Int
+  sdt          String    @db.VarChar(255)
+  Phu_Huynh    Phu_Huynh @relation(fields: [ma_phu_huynh], references: [ma_phu_huynh], onDelete: Cascade, map: "FK_SDT_ma_phu_huynh")
+
+  @@id([ma_phu_huynh, sdt], map: "PK__SDT_PH__1551237BDAB80295")
+}
+
+model SDT_QL {
+  ma_quan_ly Int
+  sdt        String  @db.VarChar(255)
+  Quan_Ly    Quan_Ly @relation(fields: [ma_quan_ly], references: [ma_quan_ly], onDelete: Cascade, map: "FK_SDT_ma_quan_ly")
+
+  @@id([ma_quan_ly, sdt], map: "PK__SDT_QL__29E5CA2EFE9C372E")
+}
+
+model Tiet_Hoc {
+  ma_tiet_hoc  Int         @id(map: "PK__Tiet_Hoc__4F4559FF6B0D7481") @default(autoincrement())
+  ngay_hoc     DateTime?   @db.Date
+  gio_bat_dau  String?     @db.VarChar(255)
+  gio_kiem_tra String?     @db.VarChar(255)
+  ma_lop_hoc   Int
+  ma_giao_vien Int
+  ghi_chu      String?     @db.VarChar(255)
+  Diem_Danh    Diem_Danh[]
+  Giao_Vien    Giao_Vien   @relation(fields: [ma_giao_vien], references: [ma_giao_vien], onDelete: Cascade, map: "FK_TH_ma_giao_vien")
+  Lop_Hoc      Lop_Hoc     @relation(fields: [ma_lop_hoc], references: [ma_lop_hoc], onDelete: Cascade, map: "FK_TH_ma_lop_hoc")
+}
+
+model To_Chuc {
+  ma_khoa_hoc  Int
+  ma_chi_nhanh Int
+  Chi_Nhanh    Chi_Nhanh @relation(fields: [ma_chi_nhanh], references: [ma_chi_nhanh], onDelete: Cascade, map: "FK_TC_ma_chi_nhanh")
+  Khoa_Hoc     Khoa_Hoc  @relation(fields: [ma_khoa_hoc], references: [ma_khoa_hoc], onDelete: Cascade, map: "FK_TC_ma_khoa_hoc")
+
+  @@id([ma_khoa_hoc, ma_chi_nhanh], map: "PK__To_Chuc__86F8924CF8F44487")
+}
+
+model Trien_Khai {
+  ma_chuong_trinh  Int
+  ma_chi_nhanh     Int
+  Chi_Nhanh        Chi_Nhanh        @relation(fields: [ma_chi_nhanh], references: [ma_chi_nhanh], onDelete: Cascade, map: "FK_TK_ma_chi_nhanh")
+  Chuong_Trinh_Hoc Chuong_Trinh_Hoc @relation(fields: [ma_chuong_trinh], references: [ma_chuong_trinh], onDelete: Cascade, map: "FK_TK_ma_chuong_trinh")
+
+  @@id([ma_chuong_trinh, ma_chi_nhanh], map: "PK__Trien_Kh__E934BA87AC88CFD4")
 }
