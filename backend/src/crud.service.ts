@@ -34,9 +34,11 @@ export class CRUDService {
   }
 
   async create(data: Prisma.Bien_Lai_Thu_TienCreateInput): Promise<Bien_Lai_Thu_Tien> {
-    return this.prisma.bien_Lai_Thu_Tien.create({
-      data,
-    });
+    // return this.prisma.bien_Lai_Thu_Tien.create({
+    //   data,
+    // });
+    const result = await this.prisma.$queryRaw`EXEC Insert_Bien_Lai_Thu_Tien ${data.so_tien_goc}, ${data.so_tien_da_thanh_toan}, ${data.hinh_thuc}, ${data.Lop_Hoc.connect.ma_lop_hoc}, ${data.Hoc_Vien.connect.ma_hoc_vien}`
+    return result[0]
   }
 
   async update(params: {
@@ -44,16 +46,20 @@ export class CRUDService {
     data: Prisma.Bien_Lai_Thu_TienUpdateInput;
   }): Promise<Bien_Lai_Thu_Tien> {
     const { data, where } = params;
-    return this.prisma.bien_Lai_Thu_Tien.update({
-      data,
-      where,
-    });
+    // return this.prisma.bien_Lai_Thu_Tien.update({
+    //   data,
+    //   where,
+    // });
+    const result = await this.prisma.$queryRaw`EXEC Update_Bien_Lai_Thu_Tien ${where.ma_bien_lai}, ${data.so_tien_goc}, ${data.so_tien_da_thanh_toan}, ${data.hinh_thuc}, ${data.Lop_Hoc.connect.ma_lop_hoc}, ${data.Hoc_Vien.connect.ma_hoc_vien}`
+    return result[0]
   }
 
   async delete(where: Prisma.Bien_Lai_Thu_TienWhereUniqueInput): Promise<Bien_Lai_Thu_Tien> {
-    return this.prisma.bien_Lai_Thu_Tien.delete({
-      where,
-    });
+    // return this.prisma.bien_Lai_Thu_Tien.delete({
+    //   where,
+    // });
+    const result = await this.prisma.$queryRaw`EXEC Delete_Bien_Lai_Thu_Tien ${where.ma_bien_lai}`
+    return result[0]
   }
 
   // async post(

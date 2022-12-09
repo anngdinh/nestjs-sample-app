@@ -26,6 +26,23 @@ export default function PageA() {
         fetchData();
     }, [])
 
+    const deleteRecord = (url) => {
+        const fetchData = async () => {
+            try {
+                {
+                    const { data: response } = await axios.delete(url);
+                    console.log(response)
+                }
+                {
+                    const { data: response } = await axios.get('http://localhost:3001/crud/reads');
+                    setAllData(response)
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchData();
+    }
 
     return (
         <>
@@ -113,7 +130,7 @@ export default function PageA() {
                                         <Button
                                             color='red'
                                             icon='trash alternate'
-                                            onClick={() => { }}
+                                            onClick={() => deleteRecord(`http://localhost:3001/crud/${e.ma_bien_lai}`)}
                                         />
                                     </Table.Cell>
                                 </Table.Row>
