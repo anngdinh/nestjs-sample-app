@@ -16,6 +16,7 @@ import {
 
 import MyHeader from "./components/MyHeader";
 import PageA from "./components/PageA";
+import PageC from "./components/PageC";
 
 export default function HomePage() {
   const PageSw = {
@@ -25,7 +26,7 @@ export default function HomePage() {
     pageC: 'pageC',
   }
 
-  const [page, setPage] = useState(PageSw.pageA); // change default page here
+  const [page, setPage] = useState(PageSw.pageC); // change default page here
 
   const handleItemClick = (e, { name }) => setPage(name)
 
@@ -71,15 +72,14 @@ export default function HomePage() {
                   onClick={handleItemClick}>
                   <Icon name='list' />
                   All Payroll
-                </Menu.Item>
-
+                </Menu.Item>*/}
                 <Menu.Item
-                  name={PageSw.groupPayroll}
-                  active={page === PageSw.groupPayroll}
+                  name={PageSw.pageC}
+                  active={page === PageSw.pageC}
                   onClick={handleItemClick}>
-                  <Icon name='tags' />
-                  Group rule
-                </Menu.Item> */}
+                  <Icon name='file outline' />
+                  Function
+                </Menu.Item>
               </Menu.Menu>
             </Menu.Item>
           </Menu>
@@ -99,11 +99,11 @@ export default function HomePage() {
 
           {/* <div style={{ display: page === PageSw.allPayroll ? 'block' : 'none' }}>
             <AllPayroll></AllPayroll>
-          </div>
-
-          <div style={{ display: page === PageSw.groupPayroll ? 'block' : 'none' }}>
-            <GroupPayroll></GroupPayroll>
           </div> */}
+
+          <div style={{ display: page === PageSw.pageC ? 'block' : 'none' }}>
+            <PageC></PageC>
+          </div>
         </Grid.Column>
       </Grid>
     </div>

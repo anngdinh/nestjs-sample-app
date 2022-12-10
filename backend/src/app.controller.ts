@@ -106,7 +106,21 @@ export class AppController {
     return this.crudService.delete({ ma_bien_lai: Number(id) });
   }
 
+  // B
 
+
+
+  // C
+
+  @Get('money/:id')
+  async getMoney(@Param('id') ma_hoc_vien: string): Promise<Number> {
+    return this.userService.Get_Total_Money_Of_Hoc_Vien(Number(ma_hoc_vien))
+  }
+
+  @Get('receipt2000/:threshold')
+  async getReceipt(@Param('threshold') threshold: string): Promise<Number> {
+    return this.userService.Total_Bien_Lai_Greater_Than_20000(Number(threshold))
+  }
 
   // @Get('post/:id')
   // async getPostById(@Param('id') id: string): Promise<PostModel> {
