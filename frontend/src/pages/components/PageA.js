@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon, Input, Label, Menu, Table, Button, Header, Step, Container, Form, Dropdown, Segment, Accordion, Checkbox } from 'semantic-ui-react'
 import ModalPageA from "./ModalPageA";
 
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function PageA() {
 
@@ -31,7 +32,9 @@ export default function PageA() {
             try {
                 {
                     const { data: response } = await axios.delete(url);
-                    console.log(response)
+                    console.log({ response })
+                    handleToast(response)
+
                 }
                 {
                     const { data: response } = await axios.get('http://localhost:3001/crud/reads');
@@ -42,6 +45,33 @@ export default function PageA() {
             }
         }
         fetchData();
+    }
+
+    const handleToast = (response) => {
+        if (response.code == 200) {
+            toast.success(response.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+        else if (response.code == 404) {
+            toast.error(response.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     }
 
     return (
@@ -139,6 +169,21 @@ export default function PageA() {
                     </Table.Body>
                 </Table>
             </Container>
+
+
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            <ToastContainer />
         </>
     );
 };

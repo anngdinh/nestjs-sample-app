@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { Icon, Label, Menu, Table, Input, Button, Dropdown, Modal, Header, Form } from 'semantic-ui-react';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 const paymentOptions = [
     {
         key: 'Cash',
@@ -31,6 +33,7 @@ export default function ModalPageA({ data, mode, URL, setAllData }) {
     const onChangeNewVar = (e) => {
         let _newVar = _.cloneDeep(newVar);
         _newVar[e.target.name] = e.target.value;
+        _newVar.so_tien_con_lai = _newVar.so_tien_can_thanh_toan - _newVar.so_tien_da_thanh_toan
         setNewVar(_newVar);
         console.log(_newVar)
     }
@@ -45,10 +48,12 @@ export default function ModalPageA({ data, mode, URL, setAllData }) {
         if (mode == 'edit') {
             const { data: response } = await axios.put(URL, newVar)
             console.log(response)
+            handleToast(response)
         }
         else {
             const { data: response } = await axios.post(URL, newVar)
             console.log(response)
+            handleToast(response)
         }
 
 
@@ -60,6 +65,33 @@ export default function ModalPageA({ data, mode, URL, setAllData }) {
         }
 
         setOpen(false);
+    }
+
+    const handleToast = (response) => {
+        if (response.code == 200) {
+            toast.success(response.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+        else if (response.code == 404) {
+            toast.error(response.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     }
 
     return <>
@@ -81,35 +113,35 @@ export default function ModalPageA({ data, mode, URL, setAllData }) {
                 <Form>
                     {mode == 'edit' ? <Form.Field>
                         <label>Mã biên lai</label>
-                        <Input value={newVar['ma_bien_lai']} placeholder='ma_bien_lai...' name='ma_bien_lai' onChange={onChangeNewVar} disabled />
+                        <Input type="number" value={newVar['ma_bien_lai']} placeholder='ma_bien_lai...' name='ma_bien_lai' onChange={onChangeNewVar} disabled />
                     </Form.Field> : <></>}
-                    
+
                     <Form.Field>
                         <label>Mã lớp học</label>
-                        <Input value={newVar['ma_lop_hoc']} placeholder='ma_lop_hoc...' name='ma_lop_hoc' onChange={onChangeNewVar} />
+                        <Input type="number" value={newVar['ma_lop_hoc']} placeholder='ma_lop_hoc...' name='ma_lop_hoc' onChange={onChangeNewVar} />
                     </Form.Field>
                     <Form.Field>
                         <label>Mã học viên</label>
-                        <Input value={newVar['ma_hoc_vien']} placeholder='ma_hoc_vien...' name='ma_hoc_vien' onChange={onChangeNewVar} />
+                        <Input type="number" value={newVar['ma_hoc_vien']} placeholder='ma_hoc_vien...' name='ma_hoc_vien' onChange={onChangeNewVar} />
                     </Form.Field>
 
 
-                    
+
                     <Form.Field>
                         <label>Số tiền gốc</label>
-                        <Input value={newVar['so_tien_goc']} placeholder='so_tien_goc...' name='so_tien_goc' onChange={onChangeNewVar} />
+                        <Input type="number" value={newVar['so_tien_goc']} placeholder='so_tien_goc...' name='so_tien_goc' onChange={onChangeNewVar} />
                     </Form.Field>
                     <Form.Field>
                         <label>Cần thanh toán</label>
-                        <Input value={newVar['so_tien_can_thanh_toan']} placeholder='so_tien_can_thanh_toan...' name='so_tien_can_thanh_toan' onChange={onChangeNewVar} />
+                        <Input type="number" value={newVar['so_tien_can_thanh_toan']} placeholder='so_tien_can_thanh_toan...' name='so_tien_can_thanh_toan' onChange={onChangeNewVar} />
                     </Form.Field>
                     <Form.Field>
                         <label>Đã thanh toán</label>
-                        <Input value={newVar['so_tien_da_thanh_toan']} placeholder='so_tien_da_thanh_toan...' name='so_tien_da_thanh_toan' onChange={onChangeNewVar} />
+                        <Input type="number" value={newVar['so_tien_da_thanh_toan']} placeholder='so_tien_da_thanh_toan...' name='so_tien_da_thanh_toan' onChange={onChangeNewVar} />
                     </Form.Field>
                     <Form.Field>
                         <label>Còn lại</label>
-                        <Input value={newVar['so_tien_con_lai']} placeholder='so_tien_con_lai...' name='so_tien_con_lai' onChange={onChangeNewVar} />
+                        <Input type="number" disabled value={newVar['so_tien_con_lai']} placeholder='so_tien_con_lai...' name='so_tien_con_lai' onChange={onChangeNewVar} />
                     </Form.Field>
 
 

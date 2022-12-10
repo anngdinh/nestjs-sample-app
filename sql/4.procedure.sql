@@ -44,7 +44,7 @@ BEGIN
 		SELECT @message as "message", @code as "code"
 		return
 	END
-	IF (@p_hinh_thuc <> 'Cart' AND @p_hinh_thuc <> 'Credit')
+	IF (@p_hinh_thuc <> 'Cash' AND @p_hinh_thuc <> 'Credit')
 	BEGIN
 		set @message  = 'Hinh thuc thanh toan khong hop le';
 		set @code =  404
@@ -121,7 +121,7 @@ BEGIN
 		return
 	END
 
-	IF (@p_hinh_thuc <> 'Cart' AND @p_hinh_thuc <> 'Credit')
+	IF (@p_hinh_thuc <> 'Cash' AND @p_hinh_thuc <> 'Credit')
 	BEGIN
 		set @message  = 'Hinh thuc thanh toan khong hop le'
 		set @code =  404
@@ -303,7 +303,7 @@ BEGIN
 		PRINT 'Hoc vien dong thua ' + CONVERT(varchar(255),@p_so_tien_da_thanh_toan - @p_so_tien_can_thanh_toan)
 		RETURN;
 	END
-	IF (@p_hinh_thuc <> 'Cart' AND @p_hinh_thuc <> 'Credit')
+	IF (@p_hinh_thuc <> 'Cash' AND @p_hinh_thuc <> 'Credit')
 	BEGIN
 		PRINT 'Hinh thuc thanh toan khong hop le'
 		RETURN;
@@ -470,7 +470,7 @@ GO
 
 
 
-CREATE OR ALTER FUNCTION Total_Bien_Lai_Greater_Than_20000 ()
+CREATE OR ALTER FUNCTION Total_Bien_Lai_Greater_Than_20000 (@threshold INT)
 RETURNS DECIMAL(10,2)
 AS
 BEGIN
@@ -495,7 +495,7 @@ BEGIN
 			  FROM Bien_Lai_Thu_Tien
 			) AS sub
 			WHERE row_num = @B_Count)
-			IF (@t_so_tien_goc > 20000)
+			IF (@t_so_tien_goc > @threshold)
 			BEGIN
 				SET @total = @total + @t_so_tien_goc
 			END
