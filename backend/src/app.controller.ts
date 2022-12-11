@@ -27,7 +27,7 @@ export class AppController {
 
   @Get('crud/reads')
   async crudRead(): Promise<Bien_Lai_Thu_TienModel[]> {
-    return this.crudService.reads({})
+    return this.crudService.reads()
   }
 
   @Post('crud/create')
@@ -108,6 +108,18 @@ export class AppController {
 
   // B
 
+  @Get('getB/:payment/:max/:min')
+  async getB(@Param('payment') payment: string, @Param('max') max: string, @Param('min') min: string) {
+    // console.log({ payment, max, min })
+    return this.userService.Get_Hoc_Vien_Bien_lai(payment, max, min);
+  }
+
+
+
+  @Get('getB2/:param')
+  async getB2(@Param('param') param: string) {
+    return this.userService.Get_Hoc_Vien_Have_Greater_Than_N_Bien_Lai(param);
+  }
 
 
   // C

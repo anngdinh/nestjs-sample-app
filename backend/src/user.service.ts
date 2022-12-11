@@ -6,7 +6,22 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) { }
+  // B
+  async Get_Hoc_Vien_Bien_lai(payment: String, max: String, min: String) {
+    const _payment = payment == "*" ? "*" : payment;
+    const _max = max == "*" ? "2147483647" : max;
+    const _min = min == "*" ? "-2147483648" : min;
+    // console.log({ _payment, _max, _min })
+    // console.log(`EXEC Get_Hoc_Vien_Bien_lai ${_payment}, ${_max}, ${_min}`)
+    const result = await this.prisma.$queryRaw`EXEC Get_Hoc_Vien_Bien_lai ${_payment}, ${_max}, ${_min}`
+    // console.log({ result })
+    return result
+  }
 
+  async Get_Hoc_Vien_Have_Greater_Than_N_Bien_Lai(param: String) {
+    const result = await this.prisma.$queryRaw`EXEC Get_Hoc_Vien_Have_Greater_Than_N_Bien_Lai ${param}`
+    return result
+  }
 
   // C
 

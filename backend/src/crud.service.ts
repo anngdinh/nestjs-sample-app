@@ -5,7 +5,7 @@ import { Bien_Lai_Thu_Tien, Prisma } from '@prisma/client';
 
 @Injectable()
 export class CRUDService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async call() {
     // const [callGetSequenceBlock, getStartEnd] = await prisma.$transaction([
@@ -15,21 +15,10 @@ export class CRUDService {
     const result = await this.prisma.$queryRaw`EXEC Foo 1`
     return result[0]
   }
-  
-  async reads(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.Bien_Lai_Thu_TienWhereUniqueInput;
-    where?: Prisma.Bien_Lai_Thu_TienWhereInput;
-    orderBy?: Prisma.Bien_Lai_Thu_TienOrderByWithRelationInput;
-  }): Promise<Bien_Lai_Thu_Tien[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+
+  async reads(): Promise<Bien_Lai_Thu_Tien[]> {
     return this.prisma.bien_Lai_Thu_Tien.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      orderBy: { ma_hoc_vien: 'asc' }
     });
   }
 
