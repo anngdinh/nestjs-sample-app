@@ -2,7 +2,6 @@ import styled from "styled-components";
 import _ from 'lodash';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Icon, Input, Label, Menu, Table, Button, Header, Step, Container, Form, Dropdown, Segment, Accordion, Checkbox } from 'semantic-ui-react'
 import ModalPageA from "./ModalPageA";
@@ -106,6 +105,7 @@ export default function PageA() {
                         }}
                         mode='create'
                         URL='http://localhost:3001/crud/create'
+                        URL_read='http://localhost:3001/crud/reads'
                         setAllData={setAllData}></ModalPageA>
                 </Menu.Menu>
             </Menu>
@@ -156,6 +156,7 @@ export default function PageA() {
                                             data={e}
                                             mode='edit'
                                             URL={`http://localhost:3001/crud/${e.ma_bien_lai}`}
+                                            URL_read='http://localhost:3001/crud/reads'
                                             setAllData={setAllData}></ModalPageA>
                                         <Button
                                             color='red'

@@ -16,17 +16,19 @@ import {
 
 import MyHeader from "./components/MyHeader";
 import PageA from "./components/PageA";
+import PageB from "./components/PageB";
+import PageB2 from "./components/PageB2";
 import PageC from "./components/PageC";
 
 export default function HomePage() {
   const PageSw = {
     pageA: 'pageA',
     pageB: 'pageB',
-
+    pageB2: 'pageB2',
     pageC: 'pageC',
   }
 
-  const [page, setPage] = useState(PageSw.pageC); // change default page here
+  const [page, setPage] = useState(PageSw.pageB); // change default page here
 
   const handleItemClick = (e, { name }) => setPage(name)
 
@@ -66,13 +68,20 @@ export default function HomePage() {
                   <Icon name='file outline' />
                   Bien lai thu tien
                 </Menu.Item>
-                {/* <Menu.Item
-                  name={PageSw.allPayroll}
-                  active={page === PageSw.allPayroll}
+                <Menu.Item
+                  name={PageSw.pageB}
+                  active={page === PageSw.pageB}
+                  onClick={handleItemClick}>
+                  <Icon name='money bill alternate outline' />
+                  Biên lai thu tiền
+                </Menu.Item>
+                <Menu.Item
+                  name={PageSw.pageB2}
+                  active={page === PageSw.pageB2}
                   onClick={handleItemClick}>
                   <Icon name='list' />
-                  All Payroll
-                </Menu.Item>*/}
+                  Quản lý hóa đơn
+                </Menu.Item>
                 <Menu.Item
                   name={PageSw.pageC}
                   active={page === PageSw.pageC}
@@ -97,9 +106,13 @@ export default function HomePage() {
             <PageA></PageA>
           </div>
 
-          {/* <div style={{ display: page === PageSw.allPayroll ? 'block' : 'none' }}>
-            <AllPayroll></AllPayroll>
-          </div> */}
+          <div style={{ display: page === PageSw.pageB ? 'block' : 'none' }}>
+            <PageB></PageB>
+          </div>
+
+          <div style={{ display: page === PageSw.pageB2 ? 'block' : 'none' }}>
+            <PageB2></PageB2>
+          </div>
 
           <div style={{ display: page === PageSw.pageC ? 'block' : 'none' }}>
             <PageC></PageC>

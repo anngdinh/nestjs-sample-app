@@ -25,7 +25,7 @@ const paymentOptions = [
     },
 ]
 
-export default function ModalPageA({ data, mode, URL, setAllData }) {
+export default function ModalPageA({ data, mode, URL, setAllData, URL_read }) {
     const [open, setOpen] = useState(false)
     const [newVar, setNewVar] = useState(data)
 
@@ -58,7 +58,7 @@ export default function ModalPageA({ data, mode, URL, setAllData }) {
 
 
         try {
-            const { data: response } = await axios.get('http://localhost:3001/crud/reads');
+            const { data: response } = await axios.get(URL_read);
             setAllData(response)
         } catch (error) {
             console.error(error)
