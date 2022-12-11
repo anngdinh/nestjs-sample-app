@@ -448,11 +448,11 @@ CREATE OR ALTER PROCEDURE Get_Hoc_Vien_Bien_lai
 	@p_so_tien_min INT = -2147483648
 AS
 BEGIN
-		IF (@p_hinh_thuc is NULL)
+		IF (@p_hinh_thuc = '*')
 		BEGIN
 			SELECT * FROM 
 			(SELECT HV.ma_hoc_vien,HV.ten, B.ma_bien_lai,B.ma_lop_hoc,B.hinh_thuc,B.so_tien_goc,B.so_tien_can_thanh_toan,B.so_tien_da_thanh_toan,B.so_tien_con_lai FROM Bien_Lai_Thu_Tien B
-			JOIN Hoc_Vien HV ON B.ma_bien_lai = HV.ma_hoc_vien) AS HV_BL
+			JOIN Hoc_Vien HV ON B.ma_hoc_vien = HV.ma_hoc_vien) AS HV_BL
 			WHERE HV_BL.so_tien_goc <= @p_so_tien_max AND HV_Bl.so_tien_goc >= @p_so_tien_min
 			ORDER BY ma_hoc_vien, ten, ma_lop_hoc, hinh_thuc, so_tien_goc
 			return
@@ -461,7 +461,7 @@ BEGIN
 		BEGIN
 			SELECT * FROM 
 			(SELECT HV.ma_hoc_vien,HV.ten, B.ma_bien_lai,B.ma_lop_hoc,B.hinh_thuc,B.so_tien_goc,B.so_tien_can_thanh_toan,B.so_tien_da_thanh_toan,B.so_tien_con_lai FROM Bien_Lai_Thu_Tien B
-			JOIN Hoc_Vien HV ON B.ma_bien_lai = HV.ma_hoc_vien) AS HV_BL
+			JOIN Hoc_Vien HV ON B.ma_hoc_vien = HV.ma_hoc_vien) AS HV_BL
 			WHERE HV_BL.so_tien_goc <= @p_so_tien_max AND HV_Bl.so_tien_goc >= @p_so_tien_min AND HV_BL.hinh_thuc = @p_hinh_thuc
 			ORDER BY ma_hoc_vien, ten, ma_lop_hoc, hinh_thuc, so_tien_goc
 			return
