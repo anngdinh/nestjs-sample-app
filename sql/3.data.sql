@@ -5,7 +5,7 @@ INSERT INTO Chuong_Trinh_Hoc VALUES ('Advance Toeic','LONGMAN','Toeic 900+')
 INSERT INTO Chuong_Trinh_Hoc VALUES ('Starting Ielts','STARTER Ielts','Ielts 4.0+')
 INSERT INTO Chuong_Trinh_Hoc VALUES ('Medium Ielts','TAKING Ielts','Ielts 6+')
 INSERT INTO Chuong_Trinh_Hoc VALUES ('Advance Ielts','LONGMAN Ielts','Ielts 7.5+')
-SELECT * FROM Chuong_Trinh_Hoc
+-- SELECT * FROM Chuong_Trinh_Hoc
 
 --Lo_Trinh_Hoc
 INSERT INTO Lo_Trinh_Hoc VALUES ('1','Toeic about subject','1')
@@ -152,8 +152,8 @@ INSERT INTO Giao_Vien VALUES (N'Nguyễn Khắc Cường',CONVERT(date,'31-1-200
 INSERT INTO Giao_Vien VALUES (N'Nguyễn Trúc Diệp',CONVERT(date,'24-12-2002',105),N'Tổ 3,Suối Dây,Tân Châu,Tây Ninh')
 INSERT INTO Giao_Vien VALUES (N'Nguyễn Ánh',CONVERT(date,'5-10-2002',105),N'Tổ 12,Suối Dây,Tân Châu,Tây Ninh')
 INSERT INTO Giao_Vien VALUES (N'Phạm Thị Thu Hường',CONVERT(date,'6-2-2002',105),N'Tổ 6,Suối Dây,Tân Châu,Tây Ninh')
-SELECT * FROM Giao_Vien
-DELETE Giao_Vien
+-- SELECT * FROM Giao_Vien
+-- DELETE Giao_Vien
 --Quan_Ly
 
 INSERT INTO Quan_Ly VALUES (N'Hải Vinh',CONVERT(date,'13-11-2002',105),N'Tổ 4,Suối Dây,Tân Châu,Tây Ninh','HUFLIT',1)
@@ -256,7 +256,7 @@ INSERT INTO Account_GV VALUES ('NguyenKhacCuong','3112002',3)
 INSERT INTO Account_GV VALUES ('NguyenTrucDiep','24122002',4)
 INSERT INTO Account_GV VALUES ('NguyenAnh','5102002',5)
 INSERT INTO Account_GV VALUES ('PhamThiThuHuong','952000',6)
-SELECT * FROM Account_GV
+-- SELECT * FROM Account_GV
 --Email_GV
 INSERT INTO Email_GV VALUES (1,'NguyenGiaBach@gmail.com')
 INSERT INTO Email_GV VALUES (2,'NguyenThanhCong@gmail.com')

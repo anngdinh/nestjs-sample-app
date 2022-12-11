@@ -395,39 +395,85 @@ GO
 
 ------------------------------------3------------------------------------
 ---Pro 1
-CREATE OR ALTER PROCEDURE Get_All_Khuyen_Mai_Of_Hoc_Vien
-	@p_ma_hoc_vien INT
-AS
-BEGIN
-	DECLARE @temp_count_HV INT;
-	SELECT @temp_count_HV = COUNT(*)
-	FROM Hoc_Vien
-	Where ma_hoc_vien = @p_ma_hoc_vien		
+-- CREATE OR ALTER PROCEDURE Get_All_Khuyen_Mai_Of_Hoc_Vien
+-- 	@p_ma_hoc_vien INT
+-- AS
+-- BEGIN
+-- 	DECLARE @temp_count_HV INT;
+-- 	SELECT @temp_count_HV = COUNT(*)
+-- 	FROM Hoc_Vien
+-- 	Where ma_hoc_vien = @p_ma_hoc_vien		
 	
-	IF @temp_count_HV = 0
-	BEGIN
-		PRINT 'Khong ton tai hoc vien nay'
-		RETURN;
-	END
-	SELECT ten,ma_hoc_vien,ma_bien_lai,Sub3.ma_khuyen_mai,gia_tri
-	FROM (
-		SELECT ten,ma_hoc_vien, Sub2.ma_bien_lai,ma_khuyen_mai FROM
-			(SELECT * FROM 
-				(SELECT H.ten, H.ma_hoc_vien, B.ma_bien_lai
-				FROM Bien_Lai_Thu_Tien B
-				JOIN Hoc_Vien H ON B.ma_hoc_vien = H.ma_hoc_vien ) AS Sub1
-			WHERE Sub1.ma_hoc_vien = @p_ma_hoc_vien) AS Sub2
-		JOIN Ap_Dung A ON Sub2.ma_bien_lai = A.ma_bien_lai) AS Sub3
-	JOIN Khuyen_Mai K ON Sub3.ma_khuyen_mai = K.ma_khuyen_mai 
-	order by gia_tri
-END
-GO
+-- 	IF @temp_count_HV = 0
+-- 	BEGIN
+-- 		PRINT 'Khong ton tai hoc vien nay'
+-- 		RETURN;
+-- 	END
+-- 	SELECT ten,ma_hoc_vien,ma_bien_lai,Sub3.ma_khuyen_mai,gia_tri
+-- 	FROM (
+-- 		SELECT ten,ma_hoc_vien, Sub2.ma_bien_lai,ma_khuyen_mai FROM
+-- 			(SELECT * FROM 
+-- 				(SELECT H.ten, H.ma_hoc_vien, B.ma_bien_lai
+-- 				FROM Bien_Lai_Thu_Tien B
+-- 				JOIN Hoc_Vien H ON B.ma_hoc_vien = H.ma_hoc_vien ) AS Sub1
+-- 			WHERE Sub1.ma_hoc_vien = @p_ma_hoc_vien) AS Sub2
+-- 		JOIN Ap_Dung A ON Sub2.ma_bien_lai = A.ma_bien_lai) AS Sub3
+-- 	JOIN Khuyen_Mai K ON Sub3.ma_khuyen_mai = K.ma_khuyen_mai 
+-- 	order by gia_tri
+-- END
+-- GO
 
 -- Ví dụ
 -- EXEC Get_All_Khuyen_Mai_Of_Hoc_Vien 2
 
 --Pro 2
-CREATE OR ALTER PROCEDURE Get_Num_Of_Bien_Lai_Of_Hoc_Vien
+-- CREATE OR ALTER PROCEDURE Get_Num_Of_Bien_Lai_Of_Hoc_Vien
+-- AS
+-- BEGIN
+-- 		SELECT Sub1.ma_hoc_vien,Sub1.ten,Sub1.sdt, COUNT(B.ma_bien_lai) AS 'So_luong_bien_lai'
+-- 		FROM(
+-- 			SELECT H.ma_hoc_vien,H.ten,SDT.sdt
+-- 			FROM Hoc_Vien H
+-- 			JOIN SDT_HV SDT ON H.ma_hoc_vien = SDT.ma_hoc_vien) AS Sub1
+-- 		JOIN Bien_Lai_Thu_Tien B On Sub1.ma_hoc_vien = B.ma_hoc_vien
+-- 		GROUP BY Sub1.ma_hoc_vien,Sub1.ten,Sub1.sdt
+-- END
+-- GO
+-- Ví dụ
+-- EXEC Get_Num_Of_Bien_Lai_Of_Hoc_Vien
+
+CREATE OR ALTER PROCEDURE Get_Hoc_Vien_Bien_lai
+	@p_hinh_thuc varchar(255) = NULL,
+	@p_so_tien_max INT = 2147483647,
+	@p_so_tien_min INT = -2147483648
+AS
+BEGIN
+		IF (@p_hinh_thuc is NULL)
+		BEGIN
+			SELECT * FROM 
+			(SELECT HV.ma_hoc_vien,HV.ten, B.ma_bien_lai,B.ma_lop_hoc,B.hinh_thuc,B.so_tien_goc,B.so_tien_can_thanh_toan,B.so_tien_da_thanh_toan,B.so_tien_con_lai FROM Bien_Lai_Thu_Tien B
+			JOIN Hoc_Vien HV ON B.ma_bien_lai = HV.ma_hoc_vien) AS HV_BL
+			WHERE HV_BL.so_tien_goc <= @p_so_tien_max AND HV_Bl.so_tien_goc >= @p_so_tien_min
+			ORDER BY ma_hoc_vien, ten, ma_lop_hoc, hinh_thuc, so_tien_goc
+			return
+		END
+		ELSE
+		BEGIN
+			SELECT * FROM 
+			(SELECT HV.ma_hoc_vien,HV.ten, B.ma_bien_lai,B.ma_lop_hoc,B.hinh_thuc,B.so_tien_goc,B.so_tien_can_thanh_toan,B.so_tien_da_thanh_toan,B.so_tien_con_lai FROM Bien_Lai_Thu_Tien B
+			JOIN Hoc_Vien HV ON B.ma_bien_lai = HV.ma_hoc_vien) AS HV_BL
+			WHERE HV_BL.so_tien_goc <= @p_so_tien_max AND HV_Bl.so_tien_goc >= @p_so_tien_min AND HV_BL.hinh_thuc = @p_hinh_thuc
+			ORDER BY ma_hoc_vien, ten, ma_lop_hoc, hinh_thuc, so_tien_goc
+			return
+		END
+END
+GO
+-- Ví dụ
+-- EXEC Get_Hoc_Vien_Bien_lai
+
+
+CREATE OR ALTER PROCEDURE Get_Hoc_Vien_Have_Greater_Than_N_Bien_Lai
+	@p_so_luong_bien_lai INT = 0
 AS
 BEGIN
 		SELECT Sub1.ma_hoc_vien,Sub1.ten,Sub1.sdt, COUNT(B.ma_bien_lai) AS 'So_luong_bien_lai'
@@ -437,12 +483,12 @@ BEGIN
 			JOIN SDT_HV SDT ON H.ma_hoc_vien = SDT.ma_hoc_vien) AS Sub1
 		JOIN Bien_Lai_Thu_Tien B On Sub1.ma_hoc_vien = B.ma_hoc_vien
 		GROUP BY Sub1.ma_hoc_vien,Sub1.ten,Sub1.sdt
+		HAVING COUNT(B.ma_bien_lai) >= @p_so_luong_bien_lai
+		ORDER BY Sub1.ma_hoc_vien
 END
 GO
 -- Ví dụ
--- EXEC Get_Num_Of_Bien_Lai_Of_Hoc_Vien
-
-
+-- EXEC Get_Hoc_Vien_Have_Greater_Than_N_Bien_Lai 3
 
 ------------------------------------4------------------------------------
 CREATE OR ALTER FUNCTION Get_Total_Money_Of_Hoc_Vien (@p_ma_hoc_vien INT)
